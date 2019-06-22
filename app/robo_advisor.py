@@ -41,3 +41,68 @@ response = requests.get(request_url)
 parsed_response = json.loads(response.text)
 
 
+
+##3. INFO OUTPUT 
+#print(parsed_response.keys())
+request_time = time.strftime("%Y-%m-%d %H:%M %p", time.localtime())
+
+last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
+
+time = parsed_response["Time Series (Daily)"]
+dates = list(time.keys())
+
+latest_day = dates[0]
+latest_close = time[latest_day]["4. close"]
+
+high_prices = []
+for date in dates:
+    high_price = time[date]["2. high"]
+    high_prices.append(float(high_price))
+recent_high =  max(high_prices)
+
+low_prices = []
+for date in dates:
+    low_price = time[date]["3. low"]
+    low_prices.append(float(low_price))
+recent_low =  min(low_prices)
+
+yes = "BUY!"
+reason_yes = "Close price was higher than open price more than 60 per cent of the time in the approximately past 100 available days"
+no = "DON'T BUY!"
+reason_no = "Close price was lower than open price more than 40 per cent of the time in the approximately past 100 available days"
+
+a = 0
+for date in dates:
+    open_price = time[date]["1. open"]
+    close_price = time[date]["4. close"]
+    if close_price > open_price:
+        a = a+1
+
+if a > len(dates)*0.6:
+    rocommendation = yes
+    reason = reason_yes
+else:
+    rocommendation = no
+    reason = reason_no
+
+print("-------------------------")
+print("SELECTED SYMBOL:",selected_symbol)
+print("-------------------------")
+print("REQUESTING STOCK MARKET DATA...")
+print("REQUEST AT:",request_time)
+print("-------------------------")
+print(f"LATEST DAY: {last_refreshed}")
+print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
+print(f"RECENT HIGH: {to_usd(float(recent_high))}")
+print(f"RECENT LOW: {to_usd(float(recent_low))}")
+print("-------------------------")
+print(f"RECOMMENDATION: {rocommendation}")
+print(f"RECOMMENDATION REASON: {reason}")
+print("-------------------------")
+print("WRITING DATA TO CSV...")
+print("-------------------------")
+print("HAPPY INVESTING!")
+print("-------------------------")
+
+
+
