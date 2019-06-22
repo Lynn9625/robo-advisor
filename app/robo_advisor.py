@@ -26,5 +26,18 @@ while True:
 
 
 
+##2. MAKE AND PARSE REQUEST
+api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
+url = "https://www.alphavantage.co/query"
+parameter = {
+    "function": "TIME_SERIES_DAILY",
+    "symbol": selected_symbol,
+    "apikey": api_key,
+    "datatype": "json"
+}
+trans_parameter = urlencode(parameter)
+request_url = unquote(url + "?" + trans_parameter)
+response = requests.get(request_url)
+parsed_response = json.loads(response.text)
 
 
