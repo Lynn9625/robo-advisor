@@ -122,3 +122,27 @@ with open(csv_file_path,"w") as csv_file:
             "volume":daily_prices["5. volume"]
         })
 
+
+
+#5. PRODUCE LINE CHART
+file_name = "data/prices.csv"
+with open(file_name, "r") as file_csv:
+    reader = csv.DictReader(file_csv)
+    graph_dates, graph_open, graph_close = [],[],[]
+    for row in reader:
+        timestramp = row["timestamp"]
+        price_open = row["open"]
+        price_close = row["close"]
+
+        graph_dates.append(str(timestramp))
+        graph_open.append(float(price_open))
+        graph_close.append(float(price_close))
+
+line_chart = pygal.Line(x_label_rotation=45, show_minor_x_labels=False)
+line_chart.x_labels = graph_dates
+a = int(len(graph_dates)*0.5)
+line_chart.x_labels_major = [graph_dates[0],graph_dates[a],graph_dates[-1]]
+line_chart.add("Open Price",graph_open)
+line_chart.add("Close Price",graph_close)
+line_chart.title = "Daily Open and Close Price($)"
+line_chart.render_in_browser()
