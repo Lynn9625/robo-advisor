@@ -15,11 +15,8 @@ pip install -r requirements.txt
 ##4. Adjust the repo
 1) Your repo should contain an ".env" file with your apikey (get your apikey at https://www.alphavantage.com):
 ALPHAVANTAGE_API_KEY="abc123"
-2) your repo should contain a ".gitignore" file which prevents the ".env" file and its secret credentials from being tracked in version control:
-.env
-3) Your repo should contain an another ".env" file inside the "data" directory to ignore CSV files which will be written inside the data directory:
-*
-!.gitignore
+2) your repo should contain a ".gitignore" file which prevents the ".env" file and its secret credentials from being tracked in version control
+3) Your repo should contain an another ".env" file inside the "data" directory to ignore CSV files which will be written inside the data directory
 
 
 ##5. From within the virtual environment, demonstrate your ability to run the Python script from the command-line:
