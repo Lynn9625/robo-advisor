@@ -5,7 +5,6 @@ import csv
 import time
 import pygal
 
-
 from urllib.parse import urlencode
 from urllib.parse import unquote
 from dotenv import load_dotenv
@@ -15,10 +14,12 @@ load_dotenv()
 def to_usd(my_price):
    return "${0:,.2f}".format(my_price)
 
+
+
 ##1. INFO INPUT AND VALIDATION
 while True:
     selected_symbol = input("Please input the stock symbol(s) that you are interested in:")
-    if selected_symbol.isupper() == True and len(selected_symbol) == 4:
+    if selected_symbol.isupper() == True and len(selected_symbol) >= 1:
         break
     else:
         print("Oh, expecting a properly-formed stock symbol like 'MSFT'. Please try again.")
@@ -39,6 +40,13 @@ trans_parameter = urlencode(parameter)
 request_url = unquote(url + "?" + trans_parameter)
 response = requests.get(request_url)
 parsed_response = json.loads(response.text)
+
+try:      ##Get this idea from Harrison Grubb who dropped this code to Slack
+   parsed_response['Time Series (Daily)']
+except:
+   print('Oh no, something is wrong. Can we start over?')
+   print('Shutting program down...')
+   exit()
 
 
 
@@ -67,9 +75,9 @@ for date in dates:
 recent_low =  min(low_prices)
 
 yes = "BUY!"
-reason_yes = "Close price was higher than open price more than 60 per cent of the time in the approximately past 100 available days"
+reason_yes = "close price was higher than open price more than 60 per cent of the time in the past available days"
 no = "DON'T BUY!"
-reason_no = "Close price was lower than open price more than 40 per cent of the time in the approximately past 100 available days"
+reason_no = "close price was lower than open price more than 40 per cent of the time in the past vailable days"
 
 a = 0
 for date in dates:
@@ -128,15 +136,20 @@ with open(csv_file_path,"w") as csv_file:
 file_name = "data/prices.csv"
 with open(file_name, "r") as file_csv:
     reader = csv.DictReader(file_csv)
-    graph_dates, graph_open, graph_close = [],[],[]
+    lc_timestramp,lc_open,lc_close = [],[],[]
     for row in reader:
         timestramp = row["timestamp"]
         price_open = row["open"]
         price_close = row["close"]
 
-        graph_dates.append(str(timestramp))
-        graph_open.append(float(price_open))
-        graph_close.append(float(price_close))
+        lc_timestramp.append(str(timestramp))
+        graph_dates = lc_timestramp[::-1]
+
+        lc_open.append(float(price_open))
+        graph_open = lc_open[::-1]
+
+        lc_close.append(float(price_close))
+        graph_close = lc_close[::-1]
 
 line_chart = pygal.Line(x_label_rotation=45, show_minor_x_labels=False)
 line_chart.x_labels = graph_dates
