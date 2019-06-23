@@ -1,4 +1,3 @@
-##How to setup and run the app
 ##1. Fork the repo, then clone it to download it onto your local computer and navigate there from the command-line:
 1) address: https://github.com/Lynn9625/robo-advisor
 
